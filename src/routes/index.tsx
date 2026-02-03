@@ -19,11 +19,22 @@ function Home() {
 }
 
 function SkillsHome() {
-  const highlighted =
-    (useQuery(api.skills.list, {
-      batch: 'highlighted',
-      limit: 6,
-    }) as PublicSkill[]) ?? []
+  const trendingPage =
+    (useQuery(api.skills.listPublicPage, {
+      sort: 'trending',
+      limit: 12,
+    }) as
+      | {
+          items: Array<{
+            skill: PublicSkill
+            latestVersion: unknown
+            ownerHandle: string | null
+          }>
+          nextCursor: string | null
+        }
+      | undefined) ?? undefined
+
+  const trending = trendingPage?.items ?? []
   const latest = (useQuery(api.skills.list, { limit: 12 }) as PublicSkill[]) ?? []
 
   return (
@@ -31,11 +42,11 @@ function SkillsHome() {
       <section className="hero">
         <div className="hero-inner">
           <div className="hero-copy fade-up" data-delay="1">
-            <span className="hero-badge">Lobster-light. Agent-right.</span>
-            <h1 className="hero-title">ClawHub, the skill dock for sharp agents.</h1>
+            <span className="hero-badge">Finance-first. Agent-right.</span>
+            <h1 className="hero-title">FinClaw, the skill dock for financial agents.</h1>
             <p className="hero-subtitle">
               Upload AgentSkills bundles, version them like npm, and make them searchable with
-              vectors. No gatekeeping, just signal.
+              vectors. No gatekeeping — no curation — just signal.
             </p>
             <div style={{ display: 'flex', gap: 12, marginTop: 20 }}>
               <Link to="/upload" search={{ updateSlug: undefined }} className="btn btn-primary">
@@ -47,7 +58,6 @@ function SkillsHome() {
                   q: undefined,
                   sort: undefined,
                   dir: undefined,
-                  highlighted: undefined,
                   view: undefined,
                   focus: undefined,
                 }}
@@ -67,22 +77,22 @@ function SkillsHome() {
       </section>
 
       <section className="section">
-        <h2 className="section-title">Highlighted skills</h2>
-        <p className="section-subtitle">Curated signal — highlighted for quick trust.</p>
+        <h2 className="section-title">Trending now</h2>
+        <p className="section-subtitle">Pure signal — installs, stars, and velocity.</p>
         <div className="grid">
-          {highlighted.length === 0 ? (
-            <div className="card">No highlighted skills yet.</div>
+          {trending.length === 0 ? (
+            <div className="card">No trending skills yet.</div>
           ) : (
-            highlighted.map((skill) => (
+            trending.map((entry) => (
               <SkillCard
-                key={skill._id}
-                skill={skill}
-                badge={getSkillBadges(skill)}
-                summaryFallback="A fresh skill bundle."
+                key={entry.skill._id}
+                skill={entry.skill}
+                badge={getSkillBadges(entry.skill)}
+                summaryFallback="A finance-ready skill bundle."
                 meta={
                   <div className="stat">
-                    ⭐ {skill.stats.stars} · ⤓ {skill.stats.downloads} · ⤒{' '}
-                    {skill.stats.installsAllTime ?? 0}
+                    ⭐ {entry.skill.stats.stars} · ⤓ {entry.skill.stats.downloads} · ⤒{' '}
+                    {entry.skill.stats.installsAllTime ?? 0}
                   </div>
                 }
               />
@@ -120,7 +130,6 @@ function SkillsHome() {
               q: undefined,
               sort: undefined,
               dir: undefined,
-              highlighted: undefined,
               view: undefined,
               focus: undefined,
             }}
