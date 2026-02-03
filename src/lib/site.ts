@@ -1,84 +1,103 @@
 export type SiteMode = 'skills' | 'souls'
 
-const DEFAULT_CLAWHUB_SITE_URL = 'https://clawhub.ai'
-const DEFAULT_ONLYCRABS_SITE_URL = 'https://onlycrabs.ai'
-const DEFAULT_ONLYCRABS_HOST = 'onlycrabs.ai'
+/**
+ * FinClaw branding + site config
+ * Souls mode is intentionally disabled (treated as "skills") to keep the repo clean.
+ */
 
+// Canonical URL for the main site (skills). Override via VITE_SITE_URL.
+const DEFAULT_SITE_URL = 'https://finclaw.dev'
+
+const DEFAULT_FINCLAW_NAME = 'FinClaw'
+const DEFAULT_FINCLAW_DESCRIPTION =
+  'a finance-first skill registry for agents, with vector search.'
+
+/**
+ * Helpers
+ */
+function safeUrl(value?: string | null): URL | null {
+  if (!value) return null
+  try {
+    return new URL(value)
+  } catch {
+    return null
+  }
+}
+
+function getHostnameFromSiteUrl(siteUrl: string): string {
+  const u = safeUrl(siteUrl)
+  if (u?.hostname) return u.hostname
+  // If someone passes "finclaw.dev" without scheme
+  return siteUrl.replace(/^https?:\/\//, '').replace(/\/.*$/, '')
+}
+
+/**
+ * ✅ New, clean names
+ */
+export function getSkillHubSiteUrl() {
+  return import.meta.env.VITE_SITE_URL ?? DEFAULT_SITE_URL
+}
+
+/**
+ * Souls is disabled. Keep function for compatibility, but always return SkillHub URL.
+ */
+export function getSoulHubSiteUrl() {
+  return getSkillHubSiteUrl()
+}
+
+/**
+ * Souls is disabled. Keep function for compatibility.
+ */
+export function getSoulHubHost() {
+  return getHostnameFromSiteUrl(getSkillHubSiteUrl())
+}
+
+/**
+ * ✅ Backwards-compatible aliases
+ * Keep these so other files don't break if they import legacy names.
+ */
 export function getClawHubSiteUrl() {
-  return import.meta.env.VITE_SITE_URL ?? DEFAULT_CLAWHUB_SITE_URL
+  return getSkillHubSiteUrl()
 }
 
 export function getOnlyCrabsSiteUrl() {
-  const explicit = import.meta.env.VITE_SOULHUB_SITE_URL
-  if (explicit) return explicit
-
-  const siteUrl = import.meta.env.VITE_SITE_URL
-  if (siteUrl) {
-    try {
-      const url = new URL(siteUrl)
-      if (
-        url.hostname === 'localhost' ||
-        url.hostname === '127.0.0.1' ||
-        url.hostname === '0.0.0.0'
-      ) {
-        return url.origin
-      }
-    } catch {
-      // ignore invalid URLs, fall through to default
-    }
-  }
-
-  return DEFAULT_ONLYCRABS_SITE_URL
+  return getSkillHubSiteUrl()
 }
 
 export function getOnlyCrabsHost() {
-  return import.meta.env.VITE_SOULHUB_HOST ?? DEFAULT_ONLYCRABS_HOST
+  return getHostnameFromSiteUrl(getSkillHubSiteUrl())
 }
 
-export function detectSiteMode(host?: string | null): SiteMode {
-  if (!host) return 'skills'
-  const onlyCrabsHost = getOnlyCrabsHost().toLowerCase()
-  const lower = host.toLowerCase()
-  if (lower === onlyCrabsHost || lower.endsWith(`.${onlyCrabsHost}`)) return 'souls'
+/**
+ * Mode detection
+ * Souls is disabled, so we always return "skills".
+ */
+export function detectSiteMode(_host?: string | null): SiteMode {
   return 'skills'
 }
 
-export function detectSiteModeFromUrl(value?: string | null): SiteMode {
-  if (!value) return 'skills'
-  try {
-    const host = new URL(value).hostname
-    return detectSiteMode(host)
-  } catch {
-    return detectSiteMode(value)
-  }
+export function detectSiteModeFromUrl(_value?: string | null): SiteMode {
+  return 'skills'
 }
 
 export function getSiteMode(): SiteMode {
-  if (typeof window !== 'undefined') {
-    return detectSiteMode(window.location.hostname)
-  }
+  // Allow forcing skills explicitly; ignore souls entirely.
   const forced = import.meta.env.VITE_SITE_MODE
-  if (forced === 'souls' || forced === 'skills') return forced
-
-  const onlyCrabsSite = import.meta.env.VITE_SOULHUB_SITE_URL
-  if (onlyCrabsSite) return detectSiteModeFromUrl(onlyCrabsSite)
-
-  const siteUrl = import.meta.env.VITE_SITE_URL ?? process.env.SITE_URL
-  if (siteUrl) return detectSiteModeFromUrl(siteUrl)
-
+  if (forced === 'skills') return 'skills'
   return 'skills'
 }
 
-export function getSiteName(mode: SiteMode = getSiteMode()) {
-  return mode === 'souls' ? 'SoulHub' : 'ClawHub'
+/**
+ * Branding strings
+ */
+export function getSiteName(_mode: SiteMode = getSiteMode()) {
+  return import.meta.env.VITE_SKILLHUB_NAME ?? DEFAULT_FINCLAW_NAME
 }
 
-export function getSiteDescription(mode: SiteMode = getSiteMode()) {
-  return mode === 'souls'
-    ? 'SoulHub — the home for SOUL.md bundles and personal system lore.'
-    : 'ClawHub — a fast skill registry for agents, with vector search.'
+export function getSiteDescription(_mode: SiteMode = getSiteMode()) {
+  return import.meta.env.VITE_SKILLHUB_DESCRIPTION ?? DEFAULT_FINCLAW_DESCRIPTION
 }
 
-export function getSiteUrlForMode(mode: SiteMode = getSiteMode()) {
-  return mode === 'souls' ? getOnlyCrabsSiteUrl() : getClawHubSiteUrl()
+export function getSiteUrlForMode(_mode: SiteMode = getSiteMode()) {
+  return getSkillHubSiteUrl()
 }
