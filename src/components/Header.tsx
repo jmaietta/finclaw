@@ -50,16 +50,16 @@ export default function Header() {
       <div className="navbar-inner">
         <Link
           to="/"
-          search={{ q: undefined, highlighted: undefined, search: undefined }}
+          search={{ q: undefined, search: undefined }}
           className="brand"
         >
           <span className="brand-mark">
-            <img src="/clawd-logo.png" alt="" aria-hidden="true" />
+            <img src="/clawd-mark.png" alt="" aria-hidden="true" />
           </span>
           <span className="brand-name">{siteName}</span>
         </Link>
         <nav className="nav-links">
-          {isSoulMode ? <a href={clawHubUrl}>ClawHub</a> : null}
+          {isSoulMode ? <a href={clawHubUrl}>FinClaw</a> : null}
           {isSoulMode ? (
             <Link
               to="/souls"
@@ -80,7 +80,6 @@ export default function Header() {
                 q: undefined,
                 sort: undefined,
                 dir: undefined,
-                highlighted: undefined,
                 view: undefined,
                 focus: undefined,
               }}
@@ -107,7 +106,6 @@ export default function Header() {
                     q: undefined,
                     sort: undefined,
                     dir: undefined,
-                    highlighted: undefined,
                     view: undefined,
                     focus: 'search',
                   }
@@ -133,7 +131,7 @@ export default function Header() {
               <DropdownMenuContent align="end">
                 {isSoulMode ? (
                   <DropdownMenuItem asChild>
-                    <a href={clawHubUrl}>ClawHub</a>
+                    <a href={clawHubUrl}>FinClaw</a>
                   </DropdownMenuItem>
                 ) : null}
                 <DropdownMenuItem asChild>
@@ -157,7 +155,6 @@ export default function Header() {
                         q: undefined,
                         sort: undefined,
                         dir: undefined,
-                        highlighted: undefined,
                         view: undefined,
                         focus: undefined,
                       }}
@@ -192,7 +189,6 @@ export default function Header() {
                             q: undefined,
                             sort: undefined,
                             dir: undefined,
-                            highlighted: undefined,
                             view: undefined,
                             focus: 'search',
                           }
