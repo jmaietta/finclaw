@@ -1,6 +1,6 @@
 {
-  "apiBase": "https://clawhub.ai",
-  "authBase": "https://clawhub.ai",
+  "apiBase": "https://finclaw.dev",
+  "authBase": "https://finclaw.dev",
   "minCliVersion": "0.1.0",
-  "registry": "https://clawhub.ai"
+  "registry": "https://finclaw.dev"
 }
