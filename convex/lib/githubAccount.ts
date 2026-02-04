@@ -48,7 +48,7 @@ export async function requireGitHubAccountAge(ctx: ActionCtx, userId: Id<'users'
     const remainingMs = MIN_ACCOUNT_AGE_MS - ageMs
     const remainingDays = Math.max(1, Math.ceil(remainingMs / (24 * 60 * 60 * 1000)))
     throw new ConvexError(
-      `GitHub account must be at least 7 days old to upload skills. Try again in ${remainingDays} day${
+      `GitHub account must be at least 2 days old to upload skills. Try again in ${remainingDays} day${
         remainingDays === 1 ? '' : 's'
       }.`,
     )
