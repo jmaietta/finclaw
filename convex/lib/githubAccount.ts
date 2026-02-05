@@ -3,7 +3,7 @@ import { internal } from '../_generated/api'
 import type { Id } from '../_generated/dataModel'
 import type { ActionCtx } from '../_generated/server'
 const GITHUB_API = 'https://api.github.com'
-const MIN_ACCOUNT_AGE_MS = 2 * 24 * 60 * 60 * 1000
+const MIN_ACCOUNT_AGE_MS = 7 * 24 * 60 * 60 * 1000
 const FETCH_TTL_MS = 24 * 60 * 60 * 1000
 type GitHubUser = {
   created_at?: string
@@ -38,7 +38,7 @@ export async function requireGitHubAccountAge(ctx: ActionCtx, userId: Id<'users'
     const remainingMs = MIN_ACCOUNT_AGE_MS - ageMs
     const remainingDays = Math.max(1, Math.ceil(remainingMs / (24 * 60 * 60 * 1000)))
     throw new ConvexError(
-      `GitHub account must be at least 2 days old to upload skills. Try again in ${remainingDays} day${
+      `GitHub account must be at least 7 days old to upload skills. Try again in ${remainingDays} day${
         remainingDays === 1 ? '' : 's'
       }.`,
     )
