@@ -6,7 +6,7 @@ export type SiteMode = 'skills' | 'souls'
  */
 
 // Canonical URL for the main site (skills). Override via VITE_SITE_URL.
-const DEFAULT_SITE_URL = 'https://finclaw.dev'
+const DEFAULT_SITE_URL = 'https://www.finclaw.dev'
 
 const DEFAULT_FINCLAW_NAME = 'FinClaw'
 const DEFAULT_FINCLAW_DESCRIPTION =
