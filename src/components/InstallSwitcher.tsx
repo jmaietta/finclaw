@@ -12,7 +12,7 @@ const PACKAGE_MANAGERS: Array<{ id: PackageManager; label: string }> = [
   { id: 'bun', label: 'bun' },
 ]
 
-export function InstallSwitcher({ exampleSlug = 'ceorater' }: InstallSwitcherProps) {
+export function InstallSwitcher({ exampleSlug = 'skill-slug' }: InstallSwitcherProps) {
   const [pm, setPm] = useState<PackageManager>('npm')
 
   const command = useMemo(() => {

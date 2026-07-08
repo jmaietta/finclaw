@@ -28,7 +28,7 @@ Live: `https://finclaw.dev`
 
 ## Install a skill
 ```bash
-npx clawhub@latest install ceorater --site https://finclaw.dev
+npx clawhub@latest install <skill-slug> --site https://finclaw.dev
 ```
 
 ## Telemetry
